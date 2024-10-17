@@ -1,6 +1,66 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Library Privacy Policy & Borrowing Rules";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="display-4 text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+        <div class="card-body">
+            <h2 class="card-title">Privacy Policy</h2>
+            <p class="text-muted">We are committed to safeguarding your privacy. Your personal data, including membership details, borrowing history, and other information, will be securely managed and not shared with third parties without your consent, except where required by law.</p>
+            
+            <h2 class="card-title mt-5">Membership Rules</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>1. Eligibility:</strong> Any individual can become a library member by filling out the membership form online or in person and providing valid identification.
+                </li>
+                <li class="list-group-item">
+                    <strong>2. Membership Fee:</strong> A nominal membership fee is required. Details of the fee structure will be provided during the registration process.
+                </li>
+                <li class="list-group-item">
+                    <strong>3. Validity of Membership:</strong> Library membership is valid for one year and can be renewed upon expiry.
+                </li>
+                <li class="list-group-item">
+                    <strong>4. Member ID Card:</strong> Upon successful registration, each member will be issued a unique library card. This card must be presented when borrowing books.
+                </li>
+            </ul>
+
+            <h2 class="card-title mt-5">Book Borrowing Rules</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>1. Borrowing Limit:</strong> Each member can borrow a maximum of 3 books at a time.
+                </li>
+                <li class="list-group-item">
+                    <strong>2. Borrowing Duration:</strong> Books can be borrowed for a period of 14 days, after which they must be returned or renewed. Late returns will incur a fine.
+                </li>
+                <li class="list-group-item">
+                    <strong>3. Renewal of Books:</strong> Books can be renewed once for an additional 7 days, provided no other member has reserved the book.
+                </li>
+                <li class="list-group-item">
+                    <strong>4. Late Return Fine:</strong> A fine of $1 per day will be charged for each book returned after the due date.
+                </li>
+                <li class="list-group-item">
+                    <strong>5. Lost or Damaged Books:</strong> In the event of a lost or damaged book, the borrower must pay the full cost of the book or provide a replacement.
+                </li>
+                <li class="list-group-item">
+                    <strong>6. Reservation of Books:</strong> Members can reserve books that are currently checked out. Once the book is returned, the reserving member will be notified and have 3 days to collect the book.
+                </li>
+            </ul>
+
+            <h2 class="card-title mt-5">General Rules</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>1. Library Conduct:</strong> Members are expected to maintain decorum in the library premises and respect fellow users.
+                </li>
+                <li class="list-group-item">
+                    <strong>2. Misuse of Membership:</strong> Misuse of the library membership (e.g., lending your card to someone else) may result in suspension or cancellation of the membership.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
