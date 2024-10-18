@@ -3,3 +3,4 @@ obj/
 .vs
 
 LibraryManagementSystem.db-journal
+.fake
