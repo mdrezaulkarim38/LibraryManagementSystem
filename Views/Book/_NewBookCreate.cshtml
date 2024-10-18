@@ -1,0 +1,47 @@
+@model LibraryManagementSystem.Models.Book
+<h3>Create a New Book</h3>
+<form asp-action="CreateBook" method="post">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Title</label>
+        <input asp-for="Title" class="form-control" placeholder="Enter book title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Author" class="control-label">Author</label>
+        <input asp-for="Author" class="form-control" placeholder="Enter author name" />
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Description</label>
+        <textarea asp-for="Description" class="form-control" placeholder="Enter book description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ISBN" class="control-label">ISBN</label>
+        <input asp-for="ISBN" class="form-control" placeholder="Enter ISBN" />
+        <span asp-validation-for="ISBN" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Category" class="control-label">Category</label>
+        <input asp-for="Category" class="form-control" placeholder="Enter category" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalCopies" class="control-label">Total Copies</label>
+        <input asp-for="TotalCopies" type="number" class="form-control" placeholder="Enter total copies" />
+        <span asp-validation-for="TotalCopies" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PublishedDate" class="control-label">Published Date</label>
+        <input asp-for="PublishedDate" type="date" class="form-control" />
+        <span asp-validation-for="PublishedDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Create Book</button>
+</form>

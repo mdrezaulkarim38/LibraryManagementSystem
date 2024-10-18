@@ -1,0 +1,20 @@
+@model LibraryManagementSystem.Models.Book;
+
+@{
+    ViewData["Title"] = "New Books";
+    var books = ViewBag.Book as IEnumerable<LibraryManagementSystem.Models.Book>;
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            @await Html.PartialAsync("_NewBookCreate", Model)
+        </div>
+
+        <div class="col-md-6">
+             @await Html.PartialAsync("_NewBookList", books)
+        </div>
+    </div>
+</div>

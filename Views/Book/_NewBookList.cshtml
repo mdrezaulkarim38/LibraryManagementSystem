@@ -1,0 +1,29 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+<h3>Existing Books</h3>
+<table class="table table-striped mt-3">
+    <thead class="thead-dark">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Category</th>
+            <th>Total Copies</th>
+            <th>Available Copies</th>
+            <th>Published Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.ISBN</td>
+                <td>@book.Category</td>
+                <td>@book.TotalCopies</td>
+                <td>@book.AvailableCopies</td>
+                <td>@book.PublishedDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
