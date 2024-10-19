@@ -27,7 +27,7 @@
         <label class="control-label">Select Category</label>
         <select id="categorySelect" class="form-control" onchange="toggleCategoryInput()">
             <option value="">Select a category</option>
-            @foreach (var category in categories)
+            @foreach (var category in categories!)
             {
                 <option value="@category.CategoryId">@category.Name</option>
             }
