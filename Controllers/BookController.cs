@@ -28,36 +28,28 @@ public class BookController : Controller
     }
 
     [HttpPost]
-    public IActionResult CreateBook(Book newBook, string newCategory)
+    public async Task<IActionResult> CreateBook(Book newBook, string newCategory)
     {
         if (ModelState.IsValid)
         {
-            if (string.IsNullOrWhiteSpace(newCategory))
+            if (!string.IsNullOrEmpty(newCategory))
             {
-                // If a category is selected, use that CategoryId
-                newBook.CategoryId = Convert.ToInt32(Request.Form["categorySelect"]);
-            }
-            else
-            {
-                // If a new category is provided, add it to the database
+                // Create new category if provided
                 var category = new Category { Name = newCategory };
                 _context.Categories.Add(category);
-                _context.SaveChanges();
-
-                // Set the new category ID for the book
-                newBook.CategoryId = category.CategoryId;
+                await _context.SaveChangesAsync();
+                newBook.CategoryId = category.CategoryId; // Set the new category ID
             }
 
             _context.Books.Add(newBook);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("NewBook");
         }
-
-        // Reload categories and books if model state is invalid
-        ViewBag.Book = _context.Books.ToList();
+        var books = _context.Books.ToList();
         ViewBag.Categories = _context.Categories.ToList();
-        return View("NewBook", newBook); // Pass the newBook model to show validation errors
+        return View("NewBook", books);
     }
+
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

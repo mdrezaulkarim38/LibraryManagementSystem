@@ -31,6 +31,7 @@
             {
                 <option value="@category.CategoryId">@category.Name</option>
             }
+            <option value="new">Add New Category</option> <!-- Option to add new category -->
         </select>
     </div>
 
@@ -58,10 +59,7 @@
     function toggleCategoryInput() {
         const select = document.getElementById('categorySelect');
         const newCategoryDiv = document.getElementById('newCategoryDiv');
-        if (select.value) {
-            newCategoryDiv.style.display = 'none'; 
-        } else {
-            newCategoryDiv.style.display = 'block'; 
-        }
+        // Show new category input if "Add New Category" is selected
+        newCategoryDiv.style.display = select.value === "new" ? 'block' : 'none';
     }
 </script>
