@@ -14,6 +14,13 @@ public class LibraryContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // Fluent API configurations or seed data
+        
+        // Configure the relationship between Book and Category
+        modelBuilder.Entity<Book>()
+            .HasOne(b => b.Category)
+            .WithMany(c => c.Books)
+            .HasForeignKey(b => b.CategoryId);
+
+        // Additional configurations can be added here
     }
 }
