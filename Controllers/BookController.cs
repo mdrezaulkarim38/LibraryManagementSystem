@@ -33,11 +33,10 @@ public class BookController : Controller
         {
             _context.Books.Add(newBook);
             _context.SaveChanges();
-            return RedirectToAction("NewBook"); // Redirect to the same page after adding the book
+            return RedirectToAction("NewBook"); 
         }
-
-        var books = _context.Books.ToList(); // Get the list of books again to display
-        return View("NewBook", books); // Return the view with the books list if the model state is invalid
+        var books = _context.Books.ToList(); 
+        return View("NewBook", books);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
