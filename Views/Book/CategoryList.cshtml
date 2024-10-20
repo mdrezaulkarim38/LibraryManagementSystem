@@ -1,0 +1,31 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Category>
+
+<h3>Category List</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Category Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    <a asp-action="EditCategory" asp-route-id="@category.CategoryId" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="DeleteCategory" asp-route-id="@category.CategoryId" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this category?');">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="CreateCategory" class="btn btn-primary mt-3">Create New Category</a>

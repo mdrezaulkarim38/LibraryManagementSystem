@@ -1,5 +1,32 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
 @{
     ViewData["Title"] = "Books";
 }
 
 <h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    @foreach (var book in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="@book.ImagePath" class="card-img-top" alt="@book.Title" style="height: 200px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@book.Title</h5>
+                    <p class="card-text">@book.Description</p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-success" onclick="addToCart('@book.BookId')">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function addToCart(bookId) {
+        // Implement your add to cart functionality here
+        console.log("Book added to cart: " + bookId);
+        alert("Book added to cart: " + bookId);
+    }
+</script>

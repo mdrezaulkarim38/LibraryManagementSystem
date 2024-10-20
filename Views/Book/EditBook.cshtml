@@ -1,0 +1,56 @@
+﻿@model LibraryManagementSystem.Models.Book
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="EditBook" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="BookId" />
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Title</label>
+        <input asp-for="Title" class="form-control" placeholder="Enter book title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Author" class="control-label">Author</label>
+        <input asp-for="Author" class="form-control" placeholder="Enter author's name" />
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryId" class="control-label">Category</label>
+        <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "Name"))">
+            <option value="">Select Category</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalCopies" class="control-label">Total Copies</label>
+        <input asp-for="TotalCopies" class="form-control" type="number" min="0" />
+        <span asp-validation-for="TotalCopies" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AvailableCopies" class="control-label">Available Copies</label>
+        <input asp-for="AvailableCopies" class="form-control" type="number" min="0" />
+        <span asp-validation-for="AvailableCopies" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PublishedDate" class="control-label">Published Date</label>
+        <input asp-for="PublishedDate" class="form-control" type="date" />
+        <span asp-validation-for="PublishedDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BookImage" class="control-label">Upload Image</label>
+        <input type="file" name="BookImage" class="form-control" />
+        <span asp-validation-for="BookImage" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+</form>

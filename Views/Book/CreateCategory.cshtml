@@ -1,0 +1,17 @@
+﻿@model LibraryManagementSystem.Models.Category;
+@{
+    ViewData["Title"] = "Category";
+}
+
+<h3>Create a New Category</h3>
+
+<form asp-action="CreateCategory" method="post">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">Category Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Create Category</button>
+    <a asp-action="CategoryList" class="btn btn-secondary mt-3">Back</a>
+</form>

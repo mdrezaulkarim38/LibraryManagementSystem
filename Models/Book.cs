@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace LibraryManagementSystem.Models;
 public class Book
 {
@@ -10,5 +11,8 @@ public class Book
     public int AvailableCopies { get; set; }
     public DateTime PublishedDate { get; set; }
     public int CategoryId { get; set; }
-    public Category? Category { get; set; } 
+    public Category? Category { get; set; }
+    public string? ImagePath { get; set; }
+    [NotMapped]
+    public IFormFile? BookImage { get; set; }
 }

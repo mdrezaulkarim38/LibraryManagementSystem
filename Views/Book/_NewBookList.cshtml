@@ -3,24 +3,42 @@
 <table class="table table-striped mt-3">
     <thead class="thead-dark">
         <tr>
+            <th>Image</th>
             <th>Title</th>
             <th>Author</th>
             <th>Category</th>
             <th>Total Copies</th>
             <th>Available Copies</th>
             <th>Published Date</th>
+            <th>Actions</th> <!-- Added Actions header -->
         </tr>
     </thead>
     <tbody>
         @foreach (var book in Model)
         {
             <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(book.ImagePath))
+                    {
+                        <img src="@book.ImagePath" alt="Book Image" style="max-width: 50px; max-height: 75px;" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
                 <td>@book.Title</td>
                 <td>@book.Author</td>
-                <td>@book.Category</td>
+                <td>@book.Category?.Name</td>
                 <td>@book.TotalCopies</td>
                 <td>@book.AvailableCopies</td>
                 <td>@book.PublishedDate.ToShortDateString()</td>
+                <td>
+                    <a asp-action="EditBook" asp-route-id="@book.BookId" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="DeleteBook" asp-route-id="@book.BookId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
