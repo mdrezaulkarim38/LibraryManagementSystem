@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LibraryManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryManagementSystem.Controllers;
+[Authorize]
 public class BookController : Controller
 {
     private readonly ILogger<BookController> _logger;
@@ -13,7 +15,7 @@ public class BookController : Controller
         _logger = logger;
         _context = context;
     }
-
+    [AllowAnonymous]
     public IActionResult Index()
     {
         var books = _context.Books.ToList();
