@@ -121,17 +121,20 @@ public class BookController : Controller
         var book = await _context.Books.FindAsync(id);
         if (book != null)
         {
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", book.ImagePath.TrimStart('/'));
-            if (System.IO.File.Exists(imagePath))
+            if (!string.IsNullOrEmpty(book.ImagePath))
             {
-                System.IO.File.Delete(imagePath);
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", book.ImagePath.TrimStart('/'));
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
             }
-
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
         }
-        return RedirectToAction("Index");
+        return RedirectToAction("NewBook");
     }
+
 
 
 
