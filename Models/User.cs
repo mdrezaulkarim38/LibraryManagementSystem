@@ -4,6 +4,12 @@ namespace LibraryManagementSystem.Models
 {
     public class User
     {
+        public User()
+        {
+            Status = 0; // Set default status to 0 (pending approval)
+            MembershipStartDate = DateTime.Now; // Automatically set membership start date
+        }
+
         public int UserId { get; set; }
 
         [Required]
@@ -17,11 +23,6 @@ namespace LibraryManagementSystem.Models
         [DataType(DataType.Password)]
         public string? Password { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match.")]
-        public string? ConfirmPassword { get; set; }
-
         public string? Role { get; set; } // e.g. "Admin" or "Member"
 
         public DateTime MembershipStartDate { get; set; }
@@ -32,5 +33,8 @@ namespace LibraryManagementSystem.Models
 
         [Required]
         public string? NIDNumber { get; set; }
+
+        [Required]
+        public int? Status { get; set; } // Default is 0 (pending approval)
     }
 }
