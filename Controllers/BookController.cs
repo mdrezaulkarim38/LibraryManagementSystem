@@ -105,7 +105,7 @@ public class BookController : Controller
 
             _context.Update(existingBook);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("NewBook");
         }
         ViewBag.Categories = _context.Categories.ToList();
         return View(book);
