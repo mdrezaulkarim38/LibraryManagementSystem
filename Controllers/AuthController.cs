@@ -11,4 +11,10 @@ public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;
     private readonly LibraryContext _context;
+
+    public AuthController(ILogger<AuthController> logger, LibraryContext context)
+    {
+        _logger = logger;
+        _context = context;
+    }
 }
