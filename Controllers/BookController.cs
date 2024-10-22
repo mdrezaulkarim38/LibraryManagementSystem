@@ -35,29 +35,67 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (BookImage != null && BookImage.Length > 0)
+            try
             {
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books");
-                var fileName = Guid.NewGuid() + Path.GetExtension(BookImage.FileName);
-                var filePath = Path.Combine(uploadDir, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (BookImage != null && BookImage.Length > 0)
                 {
-                    await BookImage.CopyToAsync(stream);
+                    var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books");
+                    var fileName = Guid.NewGuid() + Path.GetExtension(BookImage.FileName);
+                    var filePath = Path.Combine(uploadDir, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await BookImage.CopyToAsync(stream);
+                    }
+
+                    newBook.ImagePath = $"/images/books/{fileName}";
                 }
 
-                newBook.ImagePath = $"/images/books/{fileName}";
+                _context.Books.Add(newBook);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("NewBook");
             }
-
-            _context.Books.Add(newBook);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("NewBook");
+            catch (Exception ex)
+            {
+                // Log the error (you can use a logging framework here)
+                ModelState.AddModelError("", $"An error occurred while saving the book: {ex.Message}");
+            }
         }
 
         ViewBag.Book = _context.Books.ToList();
         ViewBag.Categories = _context.Categories.ToList();
-        return View("NewBook", newBook); 
+        return View("NewBook", newBook);
     }
+
+
+    //[HttpPost]
+    //public async Task<IActionResult> CreateBook(Book newBook, IFormFile? BookImage)
+    //{
+    //    if (ModelState.IsValid)
+    //    {
+    //        if (BookImage != null && BookImage.Length > 0)
+    //        {
+    //            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books");
+    //            var fileName = Guid.NewGuid() + Path.GetExtension(BookImage.FileName);
+    //            var filePath = Path.Combine(uploadDir, fileName);
+
+    //            using (var stream = new FileStream(filePath, FileMode.Create))
+    //            {
+    //                await BookImage.CopyToAsync(stream);
+    //            }
+
+    //            newBook.ImagePath = $"/images/books/{fileName}";
+    //        }
+
+    //        _context.Books.Add(newBook);
+    //        await _context.SaveChangesAsync();
+    //        return RedirectToAction("NewBook");
+    //    }
+
+    //    ViewBag.Book = _context.Books.ToList();
+    //    ViewBag.Categories = _context.Categories.ToList();
+    //    return View("NewBook", newBook); 
+    //}
 
     public IActionResult EditBook(int id)
     {

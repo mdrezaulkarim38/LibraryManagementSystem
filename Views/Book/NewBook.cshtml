@@ -7,7 +7,8 @@
 
 <div class="container mt-5">
     <h2 class="text-center">@ViewData["Title"]</h2>
-
+    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Admin" asp-action="Index">Back to Dashboard</a>
+    <a class="btn btn-secondary btn-sm" asp-area="" asp-controller="Book" asp-action="CategoryList">Category List</a>
     <div class="row">
         <div class="col-md-6">
             @await Html.PartialAsync("_NewBookCreate", Model, ViewData)

@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+    var users = ViewBag.Users as List<LibraryManagementSystem.Models.User>;
+    var books = ViewBag.Books as List<LibraryManagementSystem.Models.Book>;
+}
+
+<div class="container">
+    <h2>Users</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserId</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@(user.Status == 1 ? "Active" : "Inactive")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Books</h2><span><a class="btn btn-primary btn-sm" asp-area="" asp-controller="Book" asp-action="NewBook">Add Book</a></span>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Copies Available</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in books)
+            {
+                <tr>
+                    <td>@book.BookId</td>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Category.Name</td>
+                    <td>@book.AvailableCopies</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
