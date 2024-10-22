@@ -2,6 +2,8 @@
     ViewBag.Title = "Admin Dashboard";
     var users = ViewBag.Users as List<LibraryManagementSystem.Models.User>;
     var books = ViewBag.Books as List<LibraryManagementSystem.Models.Book>;
+    int slNoUser = 1; 
+    int slNoBook = 1; 
 }
 
 <div class="container">
@@ -9,21 +11,42 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>SL No.</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Phone</th>
+                <th>NID Number</th>
                 <th>Status</th>
+                <th>Action</th> 
             </tr>
         </thead>
         <tbody>
             @foreach (var user in users)
             {
                 <tr>
-                    <td>@user.UserId</td>
+                    <td>@slNoUser</td> 
                     <td>@user.FullName</td>
                     <td>@user.Email</td>
+                    <td>@user.Phone</td>
+                    <td>@user.NIDNumber</td>
                     <td>@(user.Status == 1 ? "Active" : "Inactive")</td>
+                    <td>
+                        @if (user.Status == 1)
+                        {
+                            <form asp-controller="Admin" asp-action="DeactivateUser" asp-route-id="@user.UserId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-warning btn-sm">Deactivate</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="Admin" asp-action="ActivateUser" asp-route-id="@user.UserId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Activate</button>
+                            </form>
+                        }
+                    </td>
+
                 </tr>
+                slNoUser++;
             }
         </tbody>
     </table>
@@ -32,7 +55,7 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>SL No.</th>
                 <th>Title</th>
                 <th>Author</th>
                 <th>Category</th>
@@ -43,12 +66,13 @@
             @foreach (var book in books)
             {
                 <tr>
-                    <td>@book.BookId</td>
+                    <td>@slNoBook</td> 
                     <td>@book.Title</td>
                     <td>@book.Author</td>
                     <td>@book.Category.Name</td>
-                    <td>@book.AvailableCopies</td>
+                    <td>@(book.TotalCopies - book.AvailableCopies)</td>
                 </tr>
+                slNoBook++;
             }
         </tbody>
     </table>

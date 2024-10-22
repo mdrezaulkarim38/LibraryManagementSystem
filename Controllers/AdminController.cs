@@ -24,4 +24,37 @@ public class AdminController : Controller
 
         return View();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> DeactivateUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        user.Status = 0;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index","Admin"); 
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ActivateUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        user.Status = 1;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Admin");
+    }
+
 }
