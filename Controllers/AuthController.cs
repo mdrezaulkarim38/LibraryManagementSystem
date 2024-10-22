@@ -127,7 +127,7 @@ public class AuthController : Controller
                     return View(model);
                 }
             }
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Login", "Auth");
         }
 
         return View(model);
