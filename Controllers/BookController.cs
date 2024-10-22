@@ -4,7 +4,7 @@ using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace LibraryManagementSystem.Controllers;
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class BookController : Controller
 {
     private readonly ILogger<BookController> _logger;

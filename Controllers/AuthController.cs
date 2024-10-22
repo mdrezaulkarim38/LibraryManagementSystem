@@ -38,7 +38,7 @@ public class AuthController : Controller
         if (ModelState.IsValid)
         {
             // Check if the hardcoded admin credentials are used
-            if (model.Email == "admin" && model.Password == "admin@123")
+            if (model.Email == "admin@lms.com" && model.Password == "admin@123")
             {
                 // Create claims for the hardcoded admin user
                 var claims = new List<Claim>
