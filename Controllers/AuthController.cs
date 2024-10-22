@@ -37,24 +37,44 @@ public class AuthController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Check if the user exists in the database
+            // Check if the hardcoded admin credentials are used
+            if (model.Email == "admin" && model.Password == "admin@123")
+            {
+                // Create claims for the hardcoded admin user
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "Admin User"),
+                new Claim(ClaimTypes.Email, "admin@example.com"),
+                new Claim(ClaimTypes.Role, "Admin") // Explicitly set the role as "Admin"
+            };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                // Sign in the hardcoded admin user
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+                return RedirectToAction("Index", "Home"); // Redirect to homepage after successful admin login
+            }
+
+            // Check if the user exists in the database for non-admin users
             var user = _context.Users.SingleOrDefault(u => u.Email == model.Email && u.Password == model.Password);
 
             if (user != null)
             {
                 var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.FullName),
-                        new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Role, user.Role ?? "Member")
-                    };
+            {
+                new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role ?? "Member") // Assign role from the database
+            };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); // Redirect to homepage after successful user login
             }
 
             // If login failed, show an error
@@ -63,6 +83,7 @@ public class AuthController : Controller
 
         return View(model);
     }
+
 
 
     // POST: Register
@@ -80,6 +101,13 @@ public class AuthController : Controller
                 return View(model);
             }
 
+            // Ensure password and confirmation match
+            if (model.Password != model.ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "Passwords do not match.");
+                return View(model);
+            }
+
             // Create new user
             var user = new User
             {
@@ -90,11 +118,24 @@ public class AuthController : Controller
                 Password = HashPassword(model.Password), // Hash the password
                 Role = "Member",
                 MembershipStartDate = DateTime.Now,
-                MembershipEndDate = null // Can be set if you want to implement membership expiration
+                MembershipEndDate = null // Optionally set this if you implement membership expiration
             };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    ModelState.AddModelError("", "An error occurred while registering the user.");
+                    return View(model);
+                }
+            }
 
             // Redirect to login after successful registration
             return RedirectToAction("Login", "User");
@@ -103,15 +144,11 @@ public class AuthController : Controller
         return View(model);
     }
 
-    // Password hashing method
+    // Method to hash password (you can use bcrypt or ASP.NET Core Identity utilities)
     private string HashPassword(string password)
     {
-        using (var sha256 = SHA256.Create())
-        {
-            var bytes = Encoding.UTF8.GetBytes(password);
-            var hash = sha256.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
+        // Implement proper password hashing here (e.g., bcrypt or SHA256)
+        return password; // Replace with actual hash implementation
     }
     public async Task<IActionResult> Logout()
     {
