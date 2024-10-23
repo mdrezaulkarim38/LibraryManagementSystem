@@ -108,10 +108,14 @@
                     <td>
                         @if (request.Status == "Pending")
                         {
-                            <form asp-controller="Admin" asp-action="ApproveBorrowRequest" asp-route-id="@request.BorrowRequestId" method="post" style="display:inline;">
+                            <form asp-controller="Admin" asp-action="ApproveBorrowRequest" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken() <!-- Ensure you have this for security -->
+                                <input type="hidden" name="requestId" value="@request.BorrowRequestId" />
                                 <button type="submit" class="btn btn-success btn-sm">Approve</button>
                             </form>
-                            <form asp-controller="Admin" asp-action="RejectBorrowRequest" asp-route-id="@request.BorrowRequestId" method="post" style="display:inline;">
+                            <form asp-controller="Admin" asp-action="RejectBorrowRequest" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="requestId" value="@request.BorrowRequestId" />
                                 <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                             </form>
                         }

@@ -75,21 +75,20 @@ public class AdminController : Controller
         }
 
         var book = await _context.Books.FindAsync(request.BookId);
-        if (book == null || book.AvailableCopies <= 0)
+        if (book == null || (book.TotalCopies - book.AvailableCopies) <= 0)
         {
             return BadRequest("Book not available.");
         }
 
         request.Status = "Approved";
-        book.AvailableCopies--;
+        book.AvailableCopies++;
 
-        // Create a borrowed book record
         var borrowedBook = new BorrowedBook
         {
             UserId = request.UserId,
             BookId = request.BookId,
             BorrowedDate = DateTime.Now,
-            ReturnDueDate = DateTime.Now.AddDays(14) // Example 14-day return period
+            ReturnDueDate = DateTime.Now.AddDays(14) 
         };
 
         _context.BorrowedBooks.Add(borrowedBook);
@@ -111,7 +110,7 @@ public class AdminController : Controller
 
         borrow.IsReturned = true;
         var book = await _context.Books.FindAsync(borrow.BookId);
-        book.AvailableCopies++;
+        book.AvailableCopies--;
 
         await _context.SaveChangesAsync();
 
