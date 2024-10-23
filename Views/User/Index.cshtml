@@ -1,0 +1,82 @@
+﻿@using LibraryManagementSystem.Models.ViewModels
+@model UserBorrowHistoryViewModel
+
+@{
+    ViewData["Title"] = "User Borrow History";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h2>Borrowed Books</h2>
+@if (Model.BorrowedBooks != null && Model.BorrowedBooks.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Borrowed Date</th>
+                <th>Return Due Date</th>
+                <th>Status</th>
+                <th>Return</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var borrowedBook in Model.BorrowedBooks)
+            {
+                <tr>
+                    <td>@borrowedBook.Book.Title</td>
+                    <td>@borrowedBook.BorrowedDate.ToShortDateString()</td>
+                    <td>@borrowedBook.ReturnDueDate.ToShortDateString()</td>
+                    <td>Borrowed</td>
+                    <td>
+                        <form asp-action="ReturnBook" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="borrowedBookId" value="@borrowedBook.BorrowedBookId" />
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to return this book?');">Return</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No borrowed books found.</p>
+}
+
+<h2>Borrow Requests</h2>
+@if (Model.BorrowRequests != null && Model.BorrowRequests.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Request Date</th>
+                <th>Status</th>
+                <th>Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in Model.BorrowRequests)
+            {
+                <tr>
+                    <td>@request.Book.Title</td>
+                    <td>@request.RequestDate.ToShortDateString()</td>
+                    <td>@request.Status</td>
+                    <td>
+                        <form asp-action="CancelBorrowRequest" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="borrowRequestId" value="@request.BorrowRequestId" />
+                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to cancel this request?');">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No borrow requests found.</p>
+}

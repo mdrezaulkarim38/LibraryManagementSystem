@@ -253,6 +253,12 @@ public class BookController : Controller
     [Authorize]
     public async Task<IActionResult> BorrowBook(int bookId)
     {
+        var roleType = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        if (roleType == "Admin")
+        {
+            TempData["Message"] = "Your are Admin.";
+            return RedirectToAction("Index");
+        }
         var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
 

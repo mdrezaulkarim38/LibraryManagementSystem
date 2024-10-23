@@ -37,6 +37,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">DashBoard</a>
                             </li>
                         }
+                        @if (User.IsInRole("Member"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">DashBoard</a>
+                            </li>
+                        }
+
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
