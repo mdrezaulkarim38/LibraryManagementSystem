@@ -5,10 +5,10 @@
 
 <h1>@ViewData["Title"]</h1>
 
-@if (!string.IsNullOrEmpty(ViewBag.Message))
+@if (TempData["Message"] != null)
 {
     <div id="alertMessage" class="alert alert-info">
-        @ViewBag.Message
+        @TempData["Message"]
     </div>
 }
 
@@ -38,7 +38,6 @@
 </div>
 
 <script>
-    // Hide the alert after 3 seconds (3000 milliseconds)
     window.onload = function () {
         var alertMessage = document.getElementById("alertMessage");
         if (alertMessage) {

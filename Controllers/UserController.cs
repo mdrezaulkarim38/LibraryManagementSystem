@@ -28,12 +28,11 @@ namespace LibraryManagementSystem.Controllers
 
             var borrowedBooks = await _context.BorrowedBooks
                 .Include(bb => bb.Book) 
-                .Where(bb => bb.UserId == user.UserId && !bb.IsReturned)
+                .Where(bb => bb.UserId == user.UserId && !bb.IsUserRequestReturn)
                 .ToListAsync();
 
-            // Fetch borrow requests for the user
             var borrowRequests = await _context.BorrowRequests
-                .Include(br => br.Book) // Include book details
+                .Include(br => br.Book)
                 .Where(br => br.UserId == user.UserId)
                 .ToListAsync();
 
@@ -56,7 +55,7 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound("Borrowed book not found.");
             }
 
-            borrowedBook.IsReturned = true;
+            borrowedBook.IsUserRequestReturn = true;
             _context.BorrowedBooks.Update(borrowedBook);
             await _context.SaveChangesAsync();
 
@@ -73,8 +72,6 @@ namespace LibraryManagementSystem.Controllers
             {
                 return NotFound("Borrow request not found.");
             }
-
-            // Optionally, you might want to check if the request can be cancelled based on its status.
 
             _context.BorrowRequests.Remove(borrowRequest);
             await _context.SaveChangesAsync();

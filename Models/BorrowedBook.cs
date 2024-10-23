@@ -10,5 +10,6 @@
         public DateTime BorrowedDate { get; set; }
         public DateTime ReturnDueDate { get; set; }
         public bool IsReturned { get; set; }
+        public bool IsUserRequestReturn {  get; set; }
     }
 }

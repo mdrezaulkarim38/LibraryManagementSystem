@@ -109,13 +109,13 @@
                         @if (request.Status == "Pending")
                         {
                             <form asp-controller="Admin" asp-action="ApproveBorrowRequest" method="post" style="display:inline;">
-                                @Html.AntiForgeryToken() <!-- Ensure you have this for security -->
+                                @Html.AntiForgeryToken()
                                 <input type="hidden" name="requestId" value="@request.BorrowRequestId" />
                                 <button type="submit" class="btn btn-success btn-sm">Approve</button>
                             </form>
                             <form asp-controller="Admin" asp-action="RejectBorrowRequest" method="post" style="display:inline;">
                                 @Html.AntiForgeryToken()
-                                <input type="hidden" name="requestId" value="@request.BorrowRequestId" />
+                                <input type="hidden" name="borrowRequestId" value="@request.BorrowRequestId" />
                                 <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                             </form>
                         }
@@ -149,15 +149,20 @@
                     <td>@request.BorrowedDate.ToString("dd-MM-yyyy")</td>
                     <td>@request.IsReturned</td>
                     <td>
-                        @if (request.IsReturned)
-                        {
-                            <form asp-controller="Admin" asp-action="ApproveReturnRequest" asp-route-id="@request.BorrowedBookId" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                            </form>
-                            <form asp-controller="Admin" asp-action="RejectReturnRequest" asp-route-id="@request.BorrowedBookId" method="post" style="display:inline;">
+                        @if (!request.IsReturned)
+                    {
+                        <form asp-controller="Admin" asp-action="ReturnBook" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="borrowId" value="@request.BorrowedBookId" />
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+
+                            <form asp-controller="Admin" asp-action="RejectReturnBook" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="borrowId" value="@request.BorrowedBookId" />
                                 <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                             </form>
-                        }
+                    }
                     </td>
                 </tr>
                 slNoReturn++;

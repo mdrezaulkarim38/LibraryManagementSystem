@@ -45,7 +45,7 @@ else
     <p>No borrowed books found.</p>
 }
 
-<h2>Borrow Requests</h2>
+<h2>Borrow History</h2>
 @if (Model.BorrowRequests != null && Model.BorrowRequests.Any())
 {
     <table class="table">
@@ -62,14 +62,20 @@ else
             {
                 <tr>
                     <td>@request.Book.Title</td>
-                    <td>@request.RequestDate.ToShortDateString()</td>
+                    <td>@request.RequestDate.ToString("dd-MM-yyyy")</td>
                     <td>@request.Status</td>
                     <td>
-                        <form asp-action="CancelBorrowRequest" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="borrowRequestId" value="@request.BorrowRequestId" />
-                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to cancel this request?');">Cancel</button>
-                        </form>
+                        @if (request.Status == "Pending")
+                        {
+                            <form asp-action="CancelBorrowRequest" method="post">
+                                <input type="hidden" name="borrowRequestId" value="@request.BorrowRequestId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Approved</span>
+                        }
                     </td>
                 </tr>
             }

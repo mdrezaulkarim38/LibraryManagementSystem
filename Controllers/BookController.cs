@@ -20,7 +20,6 @@ public class BookController : Controller
     public IActionResult Index()
     {
         var books = _context.Books.ToList();
-        ViewBag.Message = TempData["Message"];
         return View(books);
     }
 
@@ -61,7 +60,6 @@ public class BookController : Controller
             }
             catch (Exception ex)
             {
-                // Log the error (you can use a logging framework here)
                 ModelState.AddModelError("", $"An error occurred while saving the book: {ex.Message}");
             }
         }
@@ -72,34 +70,7 @@ public class BookController : Controller
     }
 
 
-    //[HttpPost]
-    //public async Task<IActionResult> CreateBook(Book newBook, IFormFile? BookImage)
-    //{
-    //    if (ModelState.IsValid)
-    //    {
-    //        if (BookImage != null && BookImage.Length > 0)
-    //        {
-    //            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books");
-    //            var fileName = Guid.NewGuid() + Path.GetExtension(BookImage.FileName);
-    //            var filePath = Path.Combine(uploadDir, fileName);
-
-    //            using (var stream = new FileStream(filePath, FileMode.Create))
-    //            {
-    //                await BookImage.CopyToAsync(stream);
-    //            }
-
-    //            newBook.ImagePath = $"/images/books/{fileName}";
-    //        }
-
-    //        _context.Books.Add(newBook);
-    //        await _context.SaveChangesAsync();
-    //        return RedirectToAction("NewBook");
-    //    }
-
-    //    ViewBag.Book = _context.Books.ToList();
-    //    ViewBag.Categories = _context.Categories.ToList();
-    //    return View("NewBook", newBook); 
-    //}
+    
     [Authorize(Roles = "Admin")]
     public IActionResult EditBook(int id)
     {
@@ -305,10 +276,6 @@ public class BookController : Controller
         TempData["Message"] = "Borrow request sent to admin.";
         return RedirectToAction("Index");
     }
-
-
-
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
