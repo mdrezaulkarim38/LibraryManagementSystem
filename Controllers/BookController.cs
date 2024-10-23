@@ -2,9 +2,10 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LibraryManagementSystem.Controllers;
-[Authorize(Roles = "Admin")]
 public class BookController : Controller
 {
     private readonly ILogger<BookController> _logger;
@@ -19,9 +20,11 @@ public class BookController : Controller
     public IActionResult Index()
     {
         var books = _context.Books.ToList();
+        ViewBag.Message = TempData["Message"];
         return View(books);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult NewBook()
     {
         var books = _context.Books.ToList();
@@ -30,6 +33,7 @@ public class BookController : Controller
         return View(new LibraryManagementSystem.Models.Book());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateBook(Book newBook, IFormFile? BookImage)
     {
@@ -96,7 +100,7 @@ public class BookController : Controller
     //    ViewBag.Categories = _context.Categories.ToList();
     //    return View("NewBook", newBook); 
     //}
-
+    [Authorize(Roles = "Admin")]
     public IActionResult EditBook(int id)
     {
         var book = _context.Books.Find(id);
@@ -154,7 +158,7 @@ public class BookController : Controller
 
 
 
-    // POST: Delete a book
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> DeleteBook(int id)
     {
@@ -177,18 +181,20 @@ public class BookController : Controller
 
 
 
-
+    [Authorize(Roles = "Admin")]
     public IActionResult CategoryList()
     {
         var categories = _context.Categories.ToList();
         return View(categories);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult CreateCategory()
     {
         return View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateCategory(Category category)
     {
@@ -202,6 +208,7 @@ public class BookController : Controller
         return View(category);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult EditCategory(int id)
     {
         var category = _context.Categories.Find(id);
@@ -211,7 +218,7 @@ public class BookController : Controller
         }
         return View(category);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> EditCategory(Category category)
     {
@@ -230,6 +237,7 @@ public class BookController : Controller
         return View(category);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> DeleteCategory(int id)
     {
@@ -241,6 +249,60 @@ public class BookController : Controller
         }
         return RedirectToAction("CategoryList");
     }
+
+    [Authorize]
+    public async Task<IActionResult> BorrowBook(int bookId)
+    {
+        var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+        if (user.Status == 0)
+        {
+            TempData["Message"] = "Your account is not activated.";
+            return RedirectToAction("Index");
+        }
+
+        var borrowedBooksCount = _context.BorrowedBooks.Count(bb => bb.UserId == user.UserId && bb.IsReturned == false);
+        if (borrowedBooksCount >= 3)
+        {
+            TempData["Message"] = "You have already borrowed 3 books. Return a book to borrow a new one.";
+            return RedirectToAction("Index");
+        }
+
+        var book = await _context.Books.FindAsync(bookId);
+        if (book == null || (book.TotalCopies - book.AvailableCopies) <= 0)
+        {
+            TempData["Message"] = "The book is out of stock.";
+            return RedirectToAction("Index");
+        }
+
+        var existingBorrowedBook = await _context.BorrowedBooks
+            .FirstOrDefaultAsync(bb => bb.UserId == user.UserId && bb.BookId == bookId && !bb.IsReturned);
+
+        if (existingBorrowedBook != null)
+        {
+            TempData["Message"] = "You have already borrowed this book.";
+            return RedirectToAction("Index");
+        }
+
+        var borrowRequest = new BorrowRequest
+        {
+            UserId = user.UserId,
+            BookId = book.BookId,
+            RequestDate = DateTime.Now,
+            Status = "Pending"
+        };
+
+        _context.BorrowRequests.Add(borrowRequest);
+        await _context.SaveChangesAsync();
+
+        TempData["Message"] = "Borrow request sent to admin.";
+        return RedirectToAction("Index");
+    }
+
+
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

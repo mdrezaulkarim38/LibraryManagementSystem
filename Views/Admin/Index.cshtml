@@ -2,11 +2,16 @@
     ViewBag.Title = "Admin Dashboard";
     var users = ViewBag.Users as List<LibraryManagementSystem.Models.User>;
     var books = ViewBag.Books as List<LibraryManagementSystem.Models.Book>;
-    int slNoUser = 1; 
-    int slNoBook = 1; 
+    var borrowRequests = ViewBag.BorrowRequests as List<LibraryManagementSystem.Models.BorrowRequest>;
+    var returnRequests = ViewBag.ReturnRequests as List<LibraryManagementSystem.Models.BorrowedBook>;
+    int slNoUser = 1;
+    int slNoBook = 1;
+    int slNoBorrow = 1;
+    int slNoReturn = 1;
 }
 
 <div class="container">
+    <!-- Existing Users Table -->
     <h2>Users</h2>
     <table class="table table-bordered table-striped">
         <thead>
@@ -17,14 +22,14 @@
                 <th>Phone</th>
                 <th>NID Number</th>
                 <th>Status</th>
-                <th>Action</th> 
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var user in users)
             {
                 <tr>
-                    <td>@slNoUser</td> 
+                    <td>@slNoUser</td>
                     <td>@user.FullName</td>
                     <td>@user.Email</td>
                     <td>@user.Phone</td>
@@ -44,14 +49,15 @@
                             </form>
                         }
                     </td>
-
                 </tr>
                 slNoUser++;
             }
         </tbody>
     </table>
 
-    <h2>Books</h2><span><a class="btn btn-primary btn-sm" asp-area="" asp-controller="Book" asp-action="NewBook">Add Book</a></span>
+    <!-- Existing Books Table -->
+    <h2>Books</h2>
+    <span><a class="btn btn-primary btn-sm" asp-area="" asp-controller="Book" asp-action="NewBook">Add Book</a></span>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -66,13 +72,91 @@
             @foreach (var book in books)
             {
                 <tr>
-                    <td>@slNoBook</td> 
+                    <td>@slNoBook</td>
                     <td>@book.Title</td>
                     <td>@book.Author</td>
                     <td>@book.Category.Name</td>
                     <td>@(book.TotalCopies - book.AvailableCopies)</td>
                 </tr>
                 slNoBook++;
+            }
+        </tbody>
+    </table>
+
+    <!-- New Borrow Requests Table -->
+    <h2>Borrow Book Requests</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>SL No.</th>
+                <th>Username</th>
+                <th>Book Title</th>
+                <th>Request Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in borrowRequests)
+            {
+                <tr>
+                    <td>@slNoBorrow</td>
+                    <td>@request.User.FullName</td>
+                    <td>@request.Book.Title</td>
+                    <td>@request.RequestDate.ToString("dd-MM-yyyy")</td>
+                    <td>@request.Status</td>
+                    <td>
+                        @if (request.Status == "Pending")
+                        {
+                            <form asp-controller="Admin" asp-action="ApproveBorrowRequest" asp-route-id="@request.BorrowRequestId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form asp-controller="Admin" asp-action="RejectBorrowRequest" asp-route-id="@request.BorrowRequestId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+                slNoBorrow++;
+            }
+        </tbody>
+    </table>
+
+    <!-- New Return Requests Table -->
+    <h2>Return Book Requests</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>SL No.</th>
+                <th>Username</th>
+                <th>Book Title</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in returnRequests)
+            {
+                <tr>
+                    <td>@slNoReturn</td>
+                    <td>@request.User.FullName</td>
+                    <td>@request.Book.Title</td>
+                    <td>@request.BorrowedDate.ToString("dd-MM-yyyy")</td>
+                    <td>@request.IsReturned</td>
+                    <td>
+                        @if (request.IsReturned)
+                        {
+                            <form asp-controller="Admin" asp-action="ApproveReturnRequest" asp-route-id="@request.BorrowedBookId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form asp-controller="Admin" asp-action="RejectReturnRequest" asp-route-id="@request.BorrowedBookId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+                slNoReturn++;
             }
         </tbody>
     </table>

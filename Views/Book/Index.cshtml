@@ -5,6 +5,13 @@
 
 <h1>@ViewData["Title"]</h1>
 
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div id="alertMessage" class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+
 <div class="row">
     @foreach (var book in Model)
     {
@@ -15,7 +22,14 @@
                     <h5 class="card-title">@book.Title</h5>
                     <p class="card-text">@book.Description</p>
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-success" onclick="addToCart('@book.BookId')">Add to Cart</button>
+                        <form asp-action="BorrowBook" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="bookId" value="@book.BookId" />
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Are you sure you want to borrow this book?');">
+                                Add to Cart
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -24,9 +38,13 @@
 </div>
 
 <script>
-    function addToCart(bookId) {
-        // Implement your add to cart functionality here
-        console.log("Book added to cart: " + bookId);
-        alert("Book added to cart: " + bookId);
-    }
+    // Hide the alert after 3 seconds (3000 milliseconds)
+    window.onload = function () {
+        var alertMessage = document.getElementById("alertMessage");
+        if (alertMessage) {
+            setTimeout(function () {
+                alertMessage.classList.add("d-none");
+            }, 3000);
+        }
+    };
 </script>

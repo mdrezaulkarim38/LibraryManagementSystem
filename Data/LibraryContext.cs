@@ -9,6 +9,8 @@ public class LibraryContext : DbContext
     public DbSet<Book> Books { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<BorrowRequest> BorrowRequests { get; set; }
+    public DbSet<BorrowedBook> BorrowedBooks { get; set; }
     // Add other DbSets for your models
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
